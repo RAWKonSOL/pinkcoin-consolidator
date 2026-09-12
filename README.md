@@ -1,6 +1,6 @@
 # Pinkcoin UTXO Consolidator
 
-A Python tool for consolidating small Pinkcoin UTXOs, typically generated through side-staking.
+A Python tool for consolidating small [Pinkcoin](https://with.pink/) UTXOs, typically generated through side-staking.
 
 ## Why this exists
 

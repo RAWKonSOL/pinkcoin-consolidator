@@ -1,14 +1,12 @@
 # Pinkcoin UTXO Consolidator
 
-A Python tool for consolidating small Pinkcoin UTXOs generated through regular staking, particularly for wallets using side staking.
+A Python tool for consolidating small Pinkcoin UTXOs, typically generated through side-staking.
 
 ## Why this exists
 
-Consistent staking can generate a large number of small unspent transaction outputs (UTXOs) over time. Side staking can make this problem significantly worse by producing additional UTXOs across multiple staking addresses.
+knifecatcher.crypto started staking for/with friends almost a decade ago and quickly realized and wondered why the CPU usage eventally got what he considered "disproportionately high for what it's doing." Side-staking is an easy way to to implement what is effectively "pooled staking," which is what he did. Somewhat problematically though, it also generates a large number of small unspent transaction outputs (UTXOs) over time. As the number of UTXOs grows, the wallet and node has to process and manage an unnecessarily large number of transaction outputs. This drastically increases CPU usage and creates other avoidable overhead. It gets EXTREMELEY TEDIOUS to manually use coin control to select inputs and otherwise create/send the necessary consolidation transactions.
 
-As the number of UTXOs grows, the wallet and node may have to process and manage an unnecessarily large number of transaction outputs. This can increase CPU usage and create other avoidable overhead.
-
-The Pinkcoin UTXO Consolidator is designed to periodically combine eligible small UTXOs into larger outputs, reducing the total number of UTXOs while preserving address isolation.
+The Pinkcoin UTXO Consolidator is designed to periodically combine eligible small UTXOs into larger outputs, reducing the total number of UTXOs while preserving address isolation. Once the easy setup requirements are in place, every address within the wallet takes seconds instead of minutes to consolidate. When knifecather.crypto or the user implements an enclosure that automates it, then it takes no time from the user whatsoever.
 
 ## What it does
 

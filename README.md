@@ -6,7 +6,7 @@ A Python tool for consolidating small [Pinkcoin](https://with.pink/) UTXOs, typi
 
 [knifecatcher.crypto](https://x.com/MyEmpireOfShit) started staking for/with friends almost a decade ago and quickly realized and wondered why the CPU usage eventally got what he considered "disproportionately high for what it's doing." Side-staking is an easy way to to implement what is effectively "pooled staking," which is what he did. Somewhat problematically though, it also generates a large number of small unspent transaction outputs (UTXOs) over time. As the number of UTXOs grows, the wallet and node has to process and manage an unnecessarily large number of transaction outputs. This drastically increases CPU usage and creates other avoidable overhead. It gets EXTREMELEY TEDIOUS to manually use coin control to select inputs and otherwise create/send the necessary consolidation transactions.
 
-The Pinkcoin UTXO Consolidator is designed to periodically combine eligible small UTXOs into larger outputs, reducing the total number of UTXOs while preserving address isolation. Once the easy setup requirements are in place, every address within the wallet takes seconds instead of minutes to consolidate. When knifecather.crypto or the user implements an enclosure that automates it, then it takes no time from the user whatsoever.
+The Pinkcoin UTXO Consolidator is designed to periodically combine eligible small UTXOs into larger outputs, reducing the total number of UTXOs while preserving address isolation. When this script is used, every address within the wallet takes a few seconds to consolidate. When knifecatcher.crypto or the user eventually automates the process, consolidation can require no manual intervention at all.
 
 ## What it does
 
@@ -29,6 +29,7 @@ This makes it useful as a standalone tool while also allowing it to serve as the
 - A synchronized Pinkcoin/Pink2D wallet or staking node
 - The `pink2d` executable available in the operating system's `PATH`
 - A wallet capable of signing the resulting transactions
+- [`consolidator-signer.py`](consolidator-signer.py) and [`pink-submit.py`](pink-submit.py) from this repository
 
 ### Pink2D configuration
 
@@ -74,27 +75,32 @@ RAW_TX_DIRECTORY = "/my/custom/folder"
 
 The custom path must be enclosed in quotation marks.
 
-If you modify the script, make sure it remains executable:
-
-```bash
-chmod +x consolidator-signer.py
-```
-
 The generated transactions are **not broadcast automatically**.
 
 After the signed transactions have been generated, the wallet can be locked again. The wallet does **not** need to remain unlocked in order to submit an already-signed transaction.
 
-## Submitting a signed transaction
+## Submitting Signed Transactions
 
-A generated signed transaction can be submitted using:
+The generated signed transactions should be submitted using the included pink-submit.py utility for reliability. Large transactions can exceed the command-line argument limit if passed directly to pink2d, resulting in an Argument list too long error.
 
-```bash
-pink2d sendrawtransaction "$(cat /path/to/transaction.signed.hex)"
+Before using pink-submit.py, configure the following variables in the file to match your Pinkcoin node:
+
+```python
+RPC_HOST = "127.0.0.1"
+RPC_PORT = 23424
+RPC_USER = "YOUR_RPC_USERNAME"
+RPC_PASSWORD = "YOUR_RPC_PASSWORD"
 ```
 
-Replace `/path/to/transaction.signed.hex` with the path to the signed transaction file you want to submit.
+Then run:
 
-The transaction should be reviewed before submission.
+```bash
+./pink-submit.py /path/to/transaction.signed.hex
+```
+
+The utility reads the signed transaction directly from the file and submits it through Pinkcoin JSON-RPC. On success, it prints the transaction ID.
+
+pink-submit.py uses only the Python 3 standard library and requires no additional Python packages.
 
 ## Safety
 
